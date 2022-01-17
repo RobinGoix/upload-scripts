@@ -341,8 +341,9 @@ def add_gps_tags(path: str, gps_tags: Dict[str, Any]):
     """This method will add gps tags to the photo found at path"""
     exif_dict = piexif.load(path)
     for tag, tag_value in gps_tags.items():
-        exif_dict["GPS"][tag] = tag_value
-
+        print(tag, tag_value)
+        if tag != 13:
+            exif_dict["GPS"][tag] = tag_value
     exif_bytes = piexif.dump(exif_dict)
     piexif.insert(exif_bytes, path)
 
