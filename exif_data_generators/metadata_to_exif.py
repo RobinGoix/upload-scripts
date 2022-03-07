@@ -4,6 +4,7 @@ This module is used to generate exif data from OSC Metadata file recorded by iOS
 import logging
 import os
 from typing import cast, List
+import datetime
 
 import constants
 from common.models import PhotoMetadata
@@ -47,12 +48,14 @@ class ExifMetadataGenerator(ExifGenerator):
             logger.warning("WARNING: NO metadata photos found at %s", path)
             return False
 
+        timestamp = int(datetime.datetime.now().timestamp())
         for photo in photos:
+            timestamp += 1
             for tmp_photo in metadata_photos:
                 metadata_photo: PhotoMetadata = cast(PhotoMetadata, tmp_photo)
                 if (int(metadata_photo.frame_index) == photo.index and
                         metadata_photo.gps.latitude and metadata_photo.gps.longitude):
-                    tags = create_required_gps_tags(metadata_photo.gps.timestamp,
+                    tags = create_required_gps_tags(timestamp,
                                                     metadata_photo.gps.latitude,
                                                     metadata_photo.gps.longitude)
                     add_optional_gps_tags(tags,
